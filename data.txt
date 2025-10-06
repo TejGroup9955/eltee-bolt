@@ -1,0 +1,846 @@
+CREATE TABLE `client_product_details` (
+  `product_details_id` bigint(20) UNSIGNED NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `requirement_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+ALTER TABLE `client_product_details`
+  ADD UNIQUE KEY `product_details_id` (`product_details_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `client_product_details`
+--
+ALTER TABLE `client_product_details`
+  MODIFY `product_details_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+COMMIT;
+
+
+CREATE TABLE `payment_description` (
+  `payment_desc_id` int(11) NOT NULL,
+  `payment_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_mode`
+--
+
+CREATE TABLE `payment_mode` (
+  `payment_mode_id` int(11) NOT NULL,
+  `payment_mode_name` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `payment_description`
+--
+ALTER TABLE `payment_description`
+  ADD PRIMARY KEY (`payment_desc_id`);
+
+--
+-- Indexes for table `payment_mode`
+--
+ALTER TABLE `payment_mode`
+  ADD PRIMARY KEY (`payment_mode_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `payment_description`
+--
+ALTER TABLE `payment_description`
+  MODIFY `payment_desc_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payment_mode`
+--
+ALTER TABLE `payment_mode`
+  MODIFY `payment_mode_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+INSERT INTO `payment_description` (`payment_desc_id`, `payment_description`) VALUES
+(1, 'Against PI / SC'),
+(32, 'Balance Against Scan Copy of all Original Shipping Documents.'),
+(33, 'Against Scan Copies of all Original Shipping Documents'),
+(34, 'In 30 Days from the Date of B/L'),
+(35, 'In 45 Days from the Date of B/L'),
+(36, 'In 60 Days from the Date of B/L'),
+(37, 'In 90 Days from the Date of B/L'),
+(38, '--------');
+
+
+INSERT INTO `payment_mode` (`payment_mode_id`, `payment_mode_name`) VALUES
+(7, 'TT'),
+(9, 'RTGS');
+
+
+CREATE TABLE `pro_forma_head` (
+  `pi_no` int(11) NOT NULL,
+  `pi_custom_number` varchar(200) DEFAULT NULL,
+  `pi_invoice_date` date NOT NULL,
+  `pi_valid_date` date NOT NULL,
+  `account_id` int(11) NOT NULL,
+  `shipping_address_flag` int(11) NOT NULL DEFAULT 1,
+  `shipping_address` text DEFAULT NULL,
+  `supplier_lic_no` varchar(200) DEFAULT NULL,
+  `supplier_lic_date` date NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `remark` text NOT NULL,
+  `total_amount` varchar(100) DEFAULT NULL,
+  `trade_discount` float DEFAULT 0,
+  `cash_discount` float NOT NULL DEFAULT 0,
+  `varai_charges` varchar(100) DEFAULT NULL,
+  `cgst` varchar(100) DEFAULT NULL,
+  `sgst` varchar(100) DEFAULT NULL,
+  `igst` varchar(100) DEFAULT NULL,
+  `grand_total` varchar(100) DEFAULT NULL,
+  `in_words` text DEFAULT NULL,
+  `credit_status` int(11) NOT NULL DEFAULT 0,
+  `credit_date` date DEFAULT NULL,
+  `pi_status` int(11) NOT NULL DEFAULT 0,
+  `user_id` int(11) NOT NULL,
+  `comp_id` int(11) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `year_id` int(11) NOT NULL,
+  `pro_forma_status` int(11) NOT NULL DEFAULT 1,
+  `sales_user_id_bdm` int(11) NOT NULL DEFAULT 0,
+  `pro_forma_type` varchar(100) DEFAULT 'Bulk',
+  `active_status` int(11) NOT NULL DEFAULT 1,
+  `deactivate_date` datetime DEFAULT NULL,
+  `deactivate_reason` text DEFAULT NULL,
+  `deactivate_user` int(11) DEFAULT 0,
+  `added_datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `tcs` varchar(100) NOT NULL,
+  `final_total` varchar(100) NOT NULL,
+  `tcs_apply_on` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pro_forma_head_details`
+--
+
+CREATE TABLE `pro_forma_head_details` (
+  `pro_forma_head_details_id` int(11) NOT NULL,
+  `pi_no` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `each_bag_weight` varchar(100) DEFAULT NULL,
+  `no_of_bags` varchar(100) DEFAULT NULL,
+  `total_weight` varchar(100) DEFAULT NULL,
+  `rate` varchar(100) DEFAULT NULL,
+  `gst` varchar(150) DEFAULT NULL,
+  `trade_discount` float NOT NULL DEFAULT 0,
+  `cash_discount` float NOT NULL DEFAULT 0,
+  `total_amt` varchar(100) DEFAULT NULL,
+  `package_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pro_forma_payment`
+--
+
+CREATE TABLE `pro_forma_payment` (
+  `pro_forma_payment_id` int(11) NOT NULL,
+  `pi_no` int(11) NOT NULL DEFAULT 0,
+  `pay_percentage` varchar(50) DEFAULT NULL,
+  `pay_in_advance` varchar(50) NOT NULL,
+  `after_percentage` int(11) NOT NULL,
+  `pay_later` varchar(50) NOT NULL,
+  `payment_desc_id` int(11) NOT NULL DEFAULT 0,
+  `after_payment_desc_id` int(11) NOT NULL,
+  `payment_mode_id` int(11) NOT NULL DEFAULT 0,
+  `time_period` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `pro_forma_head`
+--
+ALTER TABLE `pro_forma_head`
+  ADD PRIMARY KEY (`pi_no`),
+  ADD UNIQUE KEY `pi_custom_number` (`pi_custom_number`),
+  ADD KEY `pro_f_h_account_idx` (`account_id`),
+  ADD KEY `pro_f_h_state_idx` (`state_id`),
+  ADD KEY `pro_f_h_user_idx` (`user_id`),
+  ADD KEY `pro_f_h_comp_idx` (`comp_id`),
+  ADD KEY `pro_f_h_branch_idx` (`branch_id`),
+  ADD KEY `pro_f_h_year_idx` (`year_id`),
+  ADD KEY `pro_f_h_sales_user_id_bdmx` (`sales_user_id_bdm`),
+  ADD KEY `pi_no` (`pi_no`);
+
+--
+-- Indexes for table `pro_forma_head_details`
+--
+ALTER TABLE `pro_forma_head_details`
+  ADD PRIMARY KEY (`pro_forma_head_details_id`),
+  ADD KEY `pro_f_hd_pi_nox` (`pi_no`),
+  ADD KEY `pro_f_hd_product_idx` (`product_id`),
+  ADD KEY `pro_f_hd_package_idx` (`package_id`);
+
+--
+-- Indexes for table `pro_forma_payment`
+--
+ALTER TABLE `pro_forma_payment`
+  ADD PRIMARY KEY (`pro_forma_payment_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `pro_forma_head`
+--
+ALTER TABLE `pro_forma_head`
+  MODIFY `pi_no` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pro_forma_head_details`
+--
+ALTER TABLE `pro_forma_head_details`
+  MODIFY `pro_forma_head_details_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pro_forma_payment`
+--
+ALTER TABLE `pro_forma_payment`
+  MODIFY `pro_forma_payment_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `pro_forma_head` ADD `country_id` INT(11) NOT NULL AFTER `tcs_apply_on`, ADD `currency_id` INT(11) NOT NULL AFTER `country_id`, ADD `DiscountAmt` FLOAT(10,2) NOT NULL AFTER `currency_id`;
+
+ALTER TABLE `pro_forma_head` CHANGE `DiscountAmt` `DiscountAmt` TEXT NOT NULL;
+
+
+CREATE TABLE `terms_conditions` (
+  `terms_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `discription` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `comp_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `terms_conditions`
+  ADD PRIMARY KEY (`terms_id`),
+  ADD UNIQUE KEY `terms_id` (`terms_id`);
+
+
+ALTER TABLE `terms_conditions`
+  MODIFY `terms_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+COMMIT;
+
+
+CREATE TABLE `payment_terms` (
+  `pt_id` int(11) NOT NULL,
+  `payment_term` varchar(150) NOT NULL,
+  `comp_id` int(11) NOT NULL,
+  `status` enum('1','0') NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `payment_terms`
+  ADD PRIMARY KEY (`pt_id`);
+
+ALTER TABLE `payment_terms`
+  MODIFY `pt_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+INSERT INTO `payment_terms` (`pt_id`, `payment_term`, `comp_id`, `status`) VALUES (NULL, '100% payment against scan copy of OBL.', '1', '1');
+INSERT INTO `payment_terms` (`pt_id`, `payment_term`, `comp_id`, `status`) VALUES (NULL, 'In case of failure of payment, the seller has the right to sell goods at port of 
+discharge or at any other destination.', '1', '1');
+
+
+CREATE TABLE `company_master` (
+  `comp_id` int(11) NOT NULL,
+  `comp_name` varchar(100) DEFAULT NULL,
+  `comp_cont_no1` varchar(12) DEFAULT NULL,
+  `comp_cont_no2` varchar(12) DEFAULT NULL,
+  `comp_add` text DEFAULT NULL,
+  `comp_esta_year` int(10) DEFAULT NULL,
+  `comp_email` varchar(50) DEFAULT NULL,
+  `comp_website` varchar(50) DEFAULT NULL,
+  `comp_head` varchar(50) DEFAULT NULL,
+  `broucher_file` text NOT NULL,
+  `short_name` text DEFAULT NULL,
+  `gst_number` varchar(100) DEFAULT NULL,
+  `bank_details` text NOT NULL,
+  `fertilizer_license_no` text NOT NULL,
+  `license_validity_date` text NOT NULL,
+  `supplier_lic_no` varchar(150) DEFAULT NULL,
+  `supplier_lic_date` date NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `state_code` varchar(3) DEFAULT NULL,
+  `company_code` varchar(10) NOT NULL DEFAULT 'FIPL'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `company_master`
+--
+
+INSERT INTO `company_master` (`comp_id`, `comp_name`, `comp_cont_no1`, `comp_cont_no2`, `comp_add`, `comp_esta_year`, `comp_email`, `comp_website`, `comp_head`, `broucher_file`, `short_name`, `gst_number`, `bank_details`, `fertilizer_license_no`, `license_validity_date`, `supplier_lic_no`, `supplier_lic_date`, `country_id`, `state_id`, `state_code`, `company_code`) VALUES
+(1, 'ELTEE DMCC', '8805888888', '', 'Unit No. 1309, Fortune Tower, Cluster C, Jumeirah Lake Towers, Dubai, U.A.E. ', 0, 'suppor@ff.com', '', '', '', '', 'vfgfdgf', '', '', '1970-01-01', '', '0000-00-00', 101, 22, 'DB', 'MH');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `company_master`
+--
+ALTER TABLE `company_master`
+  ADD PRIMARY KEY (`comp_id`);
+COMMIT;
+
+
+
+ALTER TABLE `company_master` ADD `bank_name` VARCHAR(100) NOT NULL AFTER `company_code`, ADD `bank_branch` VARCHAR(100) NOT NULL AFTER `bank_name`, ADD `bank_address` VARCHAR(150) NOT NULL AFTER `bank_branch`, ADD `po_box` VARCHAR(100) NOT NULL AFTER `bank_address`, ADD `account_name` VARCHAR(100) NOT NULL AFTER `po_box`, ADD `account_no` TEXT NOT NULL AFTER `account_name`, ADD `iban_no` TEXT NOT NULL AFTER `account_no`, ADD `swift_code` TEXT NOT NULL AFTER `iban_no`;
+
+ALTER TABLE `terms_conditions` ADD `term_type` TEXT NOT NULL AFTER `terms_id`;
+
+CREATE TABLE `all_modules` (
+  `module_id` int(11) NOT NULL,
+  `module_name` varchar(250) NOT NULL,
+  `module_url` varchar(250) DEFAULT NULL,
+  `icon` varchar(100) NOT NULL,
+  `sequence` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `all_modules`
+--
+
+INSERT INTO `all_modules` (`module_id`, `module_name`, `module_url`, `icon`, `sequence`) VALUES
+(1, 'Home', 'index.php', '<i class=\"fa fa-home\" aria-hidden=\"true\"></i>', 1),
+(2, 'Master', NULL, '<i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>', 2);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `all_modules`
+--
+ALTER TABLE `all_modules`
+  ADD PRIMARY KEY (`module_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `all_modules`
+--
+ALTER TABLE `all_modules`
+  MODIFY `module_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
+
+CREATE TABLE `all_submodule` (
+  `submodule_id` int(11) NOT NULL,
+  `submodule_name` varchar(250) DEFAULT NULL,
+  `submodule_url` varchar(250) DEFAULT NULL,
+  `module_id` int(11) DEFAULT NULL,
+  `sequence` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `all_submodule`
+--
+ALTER TABLE `all_submodule`
+  ADD PRIMARY KEY (`submodule_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `all_submodule`
+--
+ALTER TABLE `all_submodule`
+  MODIFY `submodule_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+
+CREATE TABLE `assign_submodule` (
+  `assign_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `submodule_id` int(11) NOT NULL,
+  `All_access` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `assign_submodule`
+  ADD PRIMARY KEY (`assign_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `assign_submodule`
+--
+ALTER TABLE `assign_submodule`
+  MODIFY `assign_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+
+CREATE TABLE `assign_module` (
+  `assign_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `module_id` int(11) NOT NULL,
+  `All_access` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `assign_module`
+--
+ALTER TABLE `assign_module`
+  ADD PRIMARY KEY (`assign_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `assign_module`
+--
+ALTER TABLE `assign_module`
+  MODIFY `assign_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+
+
+
+///////////////////////////
+04-02-2025
+CREATE TABLE `sequence_master` (
+  `Sequence_No` int(11) NOT NULL,
+  `Name` enum('Purchase Order','Pro-Forma Invoice','Tax Invoice','Quotation') NOT NULL,
+  `Prefix` varchar(100) NOT NULL,
+  `PrefixIncludingYear` text NOT NULL,
+  `Sufix` varchar(100) NOT NULL,
+  `SufixIncludingYear` text NOT NULL,
+  `status` enum('1','0') NOT NULL DEFAULT '1',
+  `Sequence` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sequence_master`
+--
+
+INSERT INTO `sequence_master` (`Sequence_No`, `Name`, `Prefix`, `PrefixIncludingYear`, `Sufix`, `SufixIncludingYear`, `status`, `Sequence`) VALUES
+(1, 'Purchase Order', 'PIO2024', '', 'bbb', '', '1', '0'),
+(3, 'Pro-Forma Invoice', 'PRO', '', '', '2024', '1', '1'),
+(4, 'Tax Invoice', 'TI', '2024', '', '', '1', '1'),
+(5, 'Quotation', 'QUO', '2024', '', '', '1', '1');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `sequence_master`
+--
+ALTER TABLE `sequence_master`
+  ADD PRIMARY KEY (`Sequence_No`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `sequence_master`
+--
+ALTER TABLE `sequence_master`
+  MODIFY `Sequence_No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+COMMIT;
+
+
+
+\\12-02-2025
+
+CREATE TABLE `client_requirement_contact_master` (
+  `client_req_contact_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `requirement_id` int(11) NOT NULL,
+  `contact_person_name` text DEFAULT NULL,
+  `contact_person_mobile` varchar(15) DEFAULT NULL,
+  `contact_person_email` text DEFAULT NULL,
+  `designation` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `client_requirement_contact_master`
+  ADD PRIMARY KEY (`client_req_contact_id`);
+
+
+ALTER TABLE `client_requirement_contact_master`
+  MODIFY `client_req_contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;
+
+ALTER TABLE `client_master` ADD `LeadType` ENUM('Lead','Supplier') NOT NULL DEFAULT 'Lead' AFTER `kind_attention`;
+
+CREATE VIEW `leadsummery_salesco_dashboard`  AS  select `c`.`firm_name` AS `firm_name`,`c`.`enq_date` AS `enq_date`,`u`.`followup_time` AS `followup_time`,`c`.`enq_type` AS `enq_type`,`u`.`next_folloup_date` AS `next_folloup_date`,`u`.`client_feedback` AS `client_feedback`,`c`.`client_id` AS `client_id`,`c`.`client_name` AS `client_name`,`cr`.`client_status` AS `client_status`,`cr`.`requirement_details` AS `requirement_details`,`cr`.`requirement_id` AS `requirement_id`,`c`.`client_business` AS `client_business`,`c`.`client_add` AS `client_add`,`c`.`work_address` AS `work_address`,`c`.`client_email` AS `client_email`,`c`.`client_mob` AS `client_mob`,
+c.LeadType,
+`cr`.`user_id` AS `user_id`,`u`.`visit_id` AS `visit_id`,`cr`.`business_type` AS `business_type`,`um`.`user_name` AS `user_name`,`c`.`dept_id` AS `dept_id`,`c`.`branch_id` AS `branch_id`,`u`.`visit_time` AS `visit_time`,`um`.`report_to` AS `report_to`,`u`.`user_id` AS `user_id_report`,`u`.`visit_date` AS `visit_date`,`um`.`user_type_id` AS `user_type_id` from (((`client_master` `c` join `client_requirement_details` `cr` on(`cr`.`client_id` = `c`.`client_id`)) join `user_master` `um` on(`um`.`user_id` = `cr`.`user_id`)) join `user_visit_record` `u` on(`u`.`client_id` = `c`.`client_id` and `u`.`requirement_id` = `cr`.`requirement_id` and `u`.`visit_id` = `cr`.`visit_id`)) ;
+
+
+CREATE TABLE `client_delete_master` (
+  `delete_id` bigint(20) UNSIGNED NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `delete_date` date NOT NULL,
+  `delete_reason` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `client_delete_master`
+  ADD UNIQUE KEY `delete_id` (`delete_id`);
+
+ALTER TABLE `client_delete_master`
+  MODIFY `delete_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+COMMIT;
+
+ALTER TABLE `state_master` ADD `status` ENUM('1','0') NOT NULL DEFAULT '1' AFTER `countryID`;
+
+
+13-02-2025
+CREATE VIEW `view_lead_data`  AS  select if(`cr`.`trial_demo_status` = 1,concat(`c`.`client_name`,' - TRIAL'),`c`.`client_name`) AS `client_name`,`cr`.`trial_demo_status` AS `trial_demo_status`,`c`.`firm_name` AS `firm_name`,`c`.`maps_link` AS `maps_link`,`c`.`website_link` AS `website_link`,`c`.`visiting_card` AS `visiting_card`,`c`.`office_pincode` AS `office_pincode`,`c`.`work_pincode` AS `work_pincode`,`c`.`office_city_id` AS `office_city_id`,`c`.`office_area_id` AS `office_area_id`,`c`.`work_city_id` AS `work_city_id`,`c`.`work_area_id` AS `work_area_id`,`cr`.`po_received_date` AS `po_received_date`,`cr`.`po_received_document` AS `po_received_document`,`c`.`enq_type` AS `enq_type`,`c`.`client_id` AS `client_id`,`cr`.`client_status` AS `client_status`,`c`.`client_business` AS `client_business`,`c`.`client_add` AS `client_add`,`c`.`work_address` AS `work_address`,`cr`.`work_address` AS `work_address_req`,`c`.`client_email` AS `client_email`,`c`.`client_mob` AS `client_mob`,`c`.`client_person1` AS `client_person1`,`c`.`client_person1_mob` AS `client_person1_mob`,`c`.`client_person2` AS `client_person2`,`c`.`client_person2_mob2` AS `client_person2_mob2`,`cr`.`user_id` AS `user_id`,`c`.`client_required_details` AS `client_required_details`,`c`.`landline` AS `landline`,`c`.`fax` AS `fax`,`cr`.`business_type` AS `business_type`,`cr`.`current_status` AS `current_status`,`u`.`visit_date` AS `visit_date`,`um`.`user_name` AS `user_name`,`c`.`client_email2` AS `client_email2`,`cr`.`requirement_details` AS `requirement_details`,`u`.`visit_type` AS `visit_type`,`cr`.`requirement_id` AS `requirement_id`,`um`.`report_to` AS `report_to` from (((`client_master` `c` join `client_requirement_details` `cr` on(`cr`.`client_id` = `c`.`client_id`)) join `user_master` `um` on(`um`.`user_id` = `cr`.`user_id`)) join `user_visit_record` `u` on(`u`.`client_id` = `cr`.`client_id`)) ;
+
+CREATE VIEW `leadsummery_salesco_lead_summery`  AS  select if(`cr`.`trial_demo_status` = 1,concat(`c`.`client_name`,' - TRIAL'),`c`.`client_name`) AS `client_name`,`cr`.`trial_demo_status` AS `trial_demo_status`,`u`.`visit_date` AS `visit_date`,`u`.`followup_time` AS `followup_time`,`c`.`enq_type` AS `enq_type`,`u`.`next_folloup_date` AS `next_folloup_date`,`u`.`client_feedback` AS `client_feedback`,`u`.`visit_type` AS `visit_type`,`c`.`client_id` AS `client_id`,
+c.LeadType,
+`c`.`firm_name` AS `firm_name`,`cr`.`client_status` AS `client_status`,`cr`.`requirement_details` AS `requirement_details`,`c`.`client_business` AS `client_business`,`c`.`client_add` AS `client_add`,`c`.`work_address` AS `work_address`,`c`.`client_email` AS `client_email`,`c`.`client_mob` AS `client_mob`,`c`.`client_person1` AS `client_person1`,`c`.`client_person1_mob` AS `client_person1_mob`,`c`.`client_person2` AS `client_person2`,`c`.`client_person2_mob2` AS `client_person2_mob2`,`cr`.`requirement_id` AS `requirement_id`,`cr`.`user_id` AS `user_id`,`u`.`visit_id` AS `visit_id`,`c`.`client_email2` AS `client_email2`,`cr`.`business_type` AS `business_type`,`cr`.`current_status` AS `current_status`,`um`.`user_name` AS `user_name`,`c`.`dept_id` AS `dept_id`,`c`.`branch_id` AS `branch_id`,`um`.`report_to` AS `report_to`,`cr`.`po_received_date` AS `po_received_date`,`cr`.`po_received_document` AS `po_received_document`,`cr`.`amount` AS `amount`,`cr`.`amc_amount` AS `amc_amount`,`cr`.`amc_date` AS `amc_date` from (((`client_master` `c` join `client_requirement_details` `cr` on(`cr`.`client_id` = `c`.`client_id`)) join `user_master` `um` on(`um`.`user_id` = `cr`.`user_id`)) join `user_visit_record` `u` on(`u`.`client_id` = `c`.`client_id` and `u`.`requirement_id` = `cr`.`requirement_id` and `cr`.`visit_id` = `u`.`visit_id`)) ;
+
+
+
+INSERT INTO `all_modules` (`module_id`, `module_name`, `module_url`, `icon`, `sequence`) VALUES (NULL, 'Supplier', '', '<i class=\"fa fa-user-plus\" aria-hidden=\"true\"></i>', '5');
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Supplier Master', 'Supplier-Master.php', '5', '1');
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Supplier Summary', 'supplier-Summary.php', '5', '2');
+
+
+CREATE TABLE `callstatus_master` (
+  `id` int(11) NOT NULL,
+  `call_status` text NOT NULL,
+  `status` enum('Active','Deactive') NOT NULL DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `callstatus_master`
+--
+
+INSERT INTO `callstatus_master` (`id`, `call_status`, `status`) VALUES
+(1, 'Received', 'Active'),
+(2, 'Busy', 'Active'),
+(3, 'Ringing', 'Active'),
+(4, 'Switch Off', 'Active');
+
+ALTER TABLE `callstatus_master`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `callstatus_master`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+COMMIT;
+
+CREATE TABLE `tblfollowupmaster` (
+  `Id` int(11) NOT NULL,
+  `FollowUpLabel` varchar(250) NOT NULL,
+  `FollowUpFor` enum('Lead','Appointment','Quotation') NOT NULL DEFAULT 'Lead',
+  `status` enum('Active','Deactive') NOT NULL DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `tblfollowupmaster` (`Id`, `FollowUpLabel`, `FollowUpFor`, `status`) VALUES
+(1, 'Call Later', 'Lead', 'Active'),
+(2, 'Received', 'Lead', 'Active'),
+(3, 'Ringing', 'Lead', 'Active'),
+(4, 'Busy', 'Lead', 'Active'),
+(5, 'Wrong Number', 'Lead', 'Active'),
+(6, 'Switch Off', 'Lead', 'Active'),
+(7, 'Not Reachable', 'Lead', 'Active');
+
+ALTER TABLE `tblfollowupmaster`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `FollowUpLabel` (`FollowUpLabel`);
+
+ALTER TABLE `tblfollowupmaster`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+COMMIT;
+
+
+\\15-02-2025
+ALTER TABLE `branch_master` ADD `status` ENUM('1','0') NOT NULL DEFAULT '1' AFTER `branch_email`;
+
+
+09-05-2025
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Shipment Details', 'po_shipment.php', '7', '3');
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Shipment Document', 'shipment_document.php', '7', '3');
+
+UPDATE `all_submodule` SET `sequence` = '5' WHERE `all_submodule`.`submodule_id` = 24;
+
+DELETE FROM `all_submodule` WHERE `all_submodule`.`submodule_id` = 30;
+CREATE TABLE `purchase_shipment_documents` (
+  `shipment_document_id` int(20) UNSIGNED NOT NULL,
+  `purchase_id` int(11) NOT NULL,
+  `document_name` varchar(100) NOT NULL,
+  `document_path` text NOT NULL,
+  `upload_date_time` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `purchase_shipment_documents`
+  ADD UNIQUE KEY `shipment_document_id` (`shipment_document_id`);
+
+ALTER TABLE `purchase_shipment_documents`
+  MODIFY `shipment_document_id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+CREATE TABLE `purchase_shipment_head` (
+  `shipment_id` int(11) NOT NULL,
+  `po_number` int(11) NOT NULL,
+  `shipment_number` varchar(50) NOT NULL,
+  `shipment_date` date NOT NULL,
+  `shipment_by` text NOT NULL,
+  `modeOfShipment` varchar(50) NOT NULL,
+  `supplier_invoice` varchar(50) NOT NULL,
+  `eta` date NOT NULL,
+  `etd` date NOT NULL,
+  `no_of_container` int(11) NOT NULL,
+  `container_numbers` text NOT NULL,
+  `container_qty` text NOT NULL,
+  `entry_date_time` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `purchase_shipment_head`
+  ADD PRIMARY KEY (`shipment_id`);
+
+ALTER TABLE `purchase_shipment_head`
+  MODIFY `shipment_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+
+
+ALTER TABLE `purchase_order` ADD `shipment_document_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `po_type`, ADD `shipment_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `shipment_document_status`, ADD `container_allocation_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `shipment_status`;
+
+CREATE TABLE `purchase_shipment_details` (
+  `purchase_shipment_detail_id` int(11) NOT NULL,
+  `purchase_id` int(11) NOT NULL,
+  `purchase_shipment_head_id` int(11) NOT NULL,
+  `container_no` varchar(100) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_qty` double NOT NULL,
+  `entry_date_time` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `purchase_shipment_details`
+  ADD PRIMARY KEY (`purchase_shipment_detail_id`);
+
+ALTER TABLE `purchase_shipment_details`
+  MODIFY `purchase_shipment_detail_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+ALTER TABLE `purchase_shipment_details` ADD `pro_forma_no` INT(11) NOT NULL AFTER `entry_date_time`, ADD `linking_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `pro_forma_no`;
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Sales Documents', 'proforma_documents.php', '3', '2');
+
+ALTER TABLE `pro_forma_head` ADD `Sales_document_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `incoterms_id`;
+
+CREATE TABLE `proforma_sales_documents` (
+  `sales_document_id` int(20) UNSIGNED NOT NULL,
+  `proforma_id` int(11) NOT NULL,
+  `document_name` varchar(100) NOT NULL,
+  `document_path` text NOT NULL,
+  `upload_date_time` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `proforma_sales_documents`
+  ADD UNIQUE KEY `sales_document_id` (`sales_document_id`);
+
+ALTER TABLE `proforma_sales_documents`
+  MODIFY `sales_document_id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+
+ALTER TABLE `purchase_shipment_documents` ADD `document_id` INT NOT NULL AFTER `upload_date_time`;
+
+
+\\15-05-2025
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Document List', 'sales_document_list.php', '4', '2');
+
+
+\\16-05-2025
+ALTER TABLE `pro_forma_head` ADD `sales_approve_document_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `Sales_document_status`;
+
+ALTER TABLE `pro_forma_head` ADD `telex_release_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `sales_approve_document_status`;
+
+
+//17-05-2025
+ALTER TABLE `pro_forma_head` ADD `logistic_send_for_approval_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `Sales_document_status`;
+
+UPDATE `payment_tax` SET `tax_name` = 'Net Amount' WHERE `payment_tax`.`tax_id` = 1;
+UPDATE `payment_tax` SET `tax_name` = 'Bank Charges' WHERE `payment_tax`.`tax_id` = 2;
+INSERT INTO `payment_tax` (`tax_id`, `tax_name`) VALUES (NULL, 'Other Charges');
+
+
+
+//29-05-2025
+
+CREATE TABLE `product_description` (
+  `product_description_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_description` text DEFAULT NULL,
+  `value` varchar(20) DEFAULT NULL,
+  `product_range` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `product_description`
+  ADD PRIMARY KEY (`product_description_id`);
+
+ALTER TABLE `product_description`
+  MODIFY `product_description_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
+COMMIT;
+
+
+CREATE TABLE `proforma_product_description` (
+  `proforma_product_description_id` int(11) NOT NULL,
+  `description_id` int(11) NOT NULL,
+  `po_no` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_description` text DEFAULT NULL,
+  `percentage` varchar(20) DEFAULT NULL,
+  `product_range` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `proforma_product_description`
+  ADD PRIMARY KEY (`proforma_product_description_id`);
+
+ALTER TABLE `proforma_product_description`
+  MODIFY `proforma_product_description_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+ALTER TABLE `pro_forma_head` ADD `COAPrintStatus` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `telex_release_status`, ADD `COOPrintStatus` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `COAPrintStatus`, ADD `PKLPrintStatus` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `COOPrintStatus`;
+
+
+07-06-2025
+ALTER TABLE `pro_forma_receipt_payment` ADD `payment_tt_copy` TEXT NOT NULL AFTER `payment_mode`;
+
+ALTER TABLE `pro_forma_head` ADD `COAPrintDate` DATE NOT NULL AFTER `PKLPrintStatus`, ADD `COOPrintDate` DATE NOT NULL AFTER `COAPrintDate`, ADD `PKLPrintDate` DATE NOT NULL AFTER `COOPrintDate`;
+
+ALTER TABLE `purchase_order_receipt_payment` CHANGE `payment_status` `payment_status` INT(11) NOT NULL DEFAULT '0' COMMENT '1-Completed 0-Pending -1 Waiting Approval -2 Rejected';
+
+
+
+22-07-2025
+ALTER TABLE `pro_forma_head` ADD `BRCPrintStatus` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `PKLPrintDate`, ADD `BRCPrintDate` DATE NOT NULL AFTER `BRCPrintStatus`, ADD `TaxInvoicePrintStatus` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `BRCPrintDate`, ADD `TaxInvoicePrintDate` DATE NOT NULL AFTER `TaxInvoicePrintStatus`;
+
+CREATE TABLE `tax_invoice_head` (
+  `tax_invoice_id` int(11) NOT NULL,
+  `pi_no` int(11) NOT NULL,
+  `invoice_number` varchar(100) NOT NULL,
+  `invoice_date` date NOT NULL,
+  `invoice_amt` double NOT NULL DEFAULT 0,
+  `generated_by` int(11) NOT NULL,
+  `generated_on` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `tax_invoice_head`
+  ADD PRIMARY KEY (`tax_invoice_id`);
+
+ALTER TABLE `tax_invoice_head`
+  MODIFY `tax_invoice_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+
+ALTER TABLE `tax_invoice_head` ADD `year_id` INT(11) NOT NULL AFTER `generated_on`;
+ALTER TABLE `tax_invoice_head` ADD `comp_id` INT(11) NOT NULL AFTER `year_id`;
+
+ALTER TABLE `tax_invoice_head` ADD `bl_no` VARCHAR(100) NOT NULL AFTER `comp_id`, ADD `vessal_name` VARCHAR(100) NOT NULL AFTER `bl_no`;
+
+ALTER TABLE `pro_forma_head` ADD `coo_certificate_no` VARCHAR(100) NOT NULL AFTER `COOPrintStatus`;
+
+
+\\\30-07-2025
+
+ALTER TABLE `purchase_order` CHANGE `purchase_order_status` `purchase_order_status` INT(11) NOT NULL DEFAULT '0' COMMENT '1-Approved 2-Rejected 0-Pending -1 Waiting Approval';
+
+
+INSERT INTO `all_modules` (`module_id`, `module_name`, `module_url`, `icon`, `sequence`) VALUES (NULL, 'Reports', '', '<i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>', '8');
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Shipment Tracking', 'shipment_tracking_report.php', '9', '1');
+
+
+////// 04-08-2025
+
+ALTER TABLE `purchase_order` ADD `po_cancel_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `container_allocation_status`, ADD `po_refund_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `po_cancel_status`;
+
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Account Master', 'account_master.php', '2', '13');
+
+
+///26-05-2025
+ALTER TABLE `account_master` ADD `bank_address` TEXT NOT NULL AFTER `bank_branch_name`, ADD `IBAN_No` VARCHAR(34) NOT NULL AFTER `bank_address`;
+
+ALTER TABLE `expenses` ADD `account_id` INT NOT NULL AFTER `expense_id`;
+
+ALTER TABLE `expenses` ADD `amount` BIGINT NOT NULL AFTER `type`;
+
+ALTER TABLE `purchase_order` ADD `po_cancel_remark` TEXT NOT NULL AFTER `po_refund_status`;
+INSERT INTO `all_submodule` (`submodule_id`, `submodule_name`, `submodule_url`, `module_id`, `sequence`) VALUES (NULL, 'Cancelled Purchase Order', 'cancel_purchase_order.php', '7', '6');
+ALTER TABLE `purchase_order` CHANGE `po_refund_amount` `po_refund_amount` DOUBLE NOT NULL DEFAULT '0';
+
+
+CREATE TABLE `purchase_order_refund` (
+  `refund_id` int(11) NOT NULL,
+  `po_id` int(11) NOT NULL,
+  `refund_amt` double NOT NULL,
+  `refund_by` int(11) NOT NULL,
+  `refund_on` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `purchase_order_refund`
+  ADD PRIMARY KEY (`refund_id`);
+
+ALTER TABLE `purchase_order_refund`
+  MODIFY `refund_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+COMMIT;
+
+ALTER TABLE `expenses` ADD `invoice_date` DATE NULL AFTER `invoice_no`;
+
+ALTER TABLE `expenses` ADD `purpose` VARCHAR(50) NULL AFTER `bill_no`;
+
+DELETE FROM `all_submodule` WHERE `all_submodule`.`submodule_id` = 39
+
+INSERT INTO `all_modules` (`module_id`, `module_name`, `module_url`, `icon`, `sequence`) VALUES (NULL, 'Expense Master', 'expense_master.php', '<i class=\"fa fa-money\" aria-hidden=\"true\"></i>', '9');
+
+ALTER TABLE `purchase_order_details` CHANGE `pi_no` `pi_no` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'proforma detail id saved';
